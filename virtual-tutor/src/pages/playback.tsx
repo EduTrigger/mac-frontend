@@ -1,4 +1,4 @@
-import { AspectRatio } from '@mantine/core';
+import { AspectRatio } from "@mantine/core";
 
 export default function Demo() {
   return (
