@@ -4,9 +4,27 @@ import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 export default function BaseDemo(props: Partial<DropzoneProps>) {
   const theme = useMantineTheme();
+
+  const uploadFiles = async (files: File[]) => {
+    // TODO: Implement authentication
+    const formData = new FormData();
+    files.forEach((file) => formData.append("file", file));
+
+    const response = await fetch("/api/documents/route", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      // Files uploaded successfully
+    } else {
+      // Handle error
+    }
+  };
+
   return (
     <Dropzone
-      onDrop={(files) => console.log("accepted files", files)}
+      onDrop={uploadFiles}
       onReject={(files) => console.log("rejected files", files)}
       maxSize={3 * 1024 ** 2}
       accept={IMAGE_MIME_TYPE}
