@@ -17,6 +17,7 @@ const S3Image = ({ Key }: { Key: string }) => {
 
 export default function Demo() {
   return (
+	<Images />,
 	<ImagePicker />,
     <AspectRatio ratio={16 / 9}>
       <iframe

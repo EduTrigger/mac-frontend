@@ -23,7 +23,7 @@ export async function GET() {
 }
 
 // endpoint to upload a file to the bucket
-export async function POST(request: NextRequest) {
+export default async function POST(request: NextRequest) {
   const formData = await request.formData();
   const files = formData.getAll("file") as File[];
 

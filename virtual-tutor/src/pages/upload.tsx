@@ -12,8 +12,9 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
 
     const response = await fetch("/api/documents/route", {
       method: "POST",
-      body: formData,
+      body: formData
     });
+
 
     if (response.status === 200) {
       // Files uploaded successfully
@@ -26,7 +27,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
     <Dropzone
       onDrop={uploadFiles}
       onReject={(files) => console.log("rejected files", files)}
-      maxSize={3 * 1024 ** 2}
+      maxSize={10 * 1024 ** 2}
       accept={IMAGE_MIME_TYPE}
       {...props}
     >
@@ -62,7 +63,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
             Drag images here or click to select files
           </Text>
           <Text size="sm" color="dimmed" inline mt={7}>
-            Attach as many files as you like, each file should not exceed 5mb
+            Attach as many files as you like, each file should not exceed 10mb
           </Text>
         </div>
       </Group>
