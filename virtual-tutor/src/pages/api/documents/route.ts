@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import {
   S3Client,
-  ListObjectsCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 
@@ -17,55 +16,31 @@ const s3 = new S3Client({
   },
 });
 
+
 export default async function handler(req, res) {
-  //res.status(200).json({ message: 'Hello from the API route!' });
-    const form = new formidable.IncomingForm();
-
-  // Parse the incoming form data
-  const parseResult = await new Promise((resolve, reject) => {
-    form.parse(req, (err, fields, files) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ fields, files });
-      }
-    });
-  });
-
-  const { files } = parseResult;
-
   try {
-     res = await Promise.all(
-      Object.values(files).map(async (file: formidable.File) => {
-        // Read the file into a Buffer
-        const Body = await new Promise<Buffer>((resolve, reject) => {
-          const readStream = require('fs').createReadStream(file.path);
+	const parseForm = (req) => {
+	  return new Promise((resolve, reject) => {
+		const form = new formidable.IncomingForm();
 
-          const chunks: Buffer[] = [];
-          readStream.on('data', (chunk: Buffer) => {
-            chunks.push(chunk);
-          });
+		form.parse(req, (err, fields, files) => {
+		  if (err) {
+			reject(err);
+		  } else {
+			resolve({ fields, files });
+		  }
+		});
+	  });
+	};
 
-          readStream.on('end', () => {
-            const fileBuffer = Buffer.concat(chunks);
-            resolve(fileBuffer);
-          });
 
-          readStream.on('error', (error: any) => {
-            reject(error);
-          });
-        });
+    console.log(fields);
 
-        // Upload the file to S3
-        await s3.send(new PutObjectCommand({ Bucket, Key: file.name, Body }));
+    // You can proceed with handling the fields here
 
-        return { fileName: file.name, uploaded: true };
-      })
-    );
-
-    return NextResponse.json(res);
-  } catch (error) {
-    console.error('Error uploading files to S3:', error);
-    return NextResponse.error('Failed to upload files', 500);
-}
+  } catch (err) {
+    console.error('Form parsing error:', err);
+    res.statusCode = 400;
+    res.end('Form parsing error: ' + err.message);
+  }
 }
