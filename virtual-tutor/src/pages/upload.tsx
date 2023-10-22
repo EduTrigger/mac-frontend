@@ -1,9 +1,8 @@
 import { Group, Text, rem } from '@mantine/core';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { useState } from "react";
 import { useS3Upload } from "next-s3-upload";
-import useSWRMutation from "swr/mutation";
+import useSWR from "swr";
 
 function ImageUploadIcon({ status, ...props }) {
   if (status.accepted) {
@@ -27,35 +26,18 @@ function getIconColor(status, theme) {
     : theme.black;
 }
 
-async function uploadDocuments(
-  url: string,
-  { arg }: { arg: { files: FileWithPath[] } }
-): Promise<_Object[]> {
-  const body = new FormData();
-  arg.files.forEach((file) => {
-    body.append("file", file, file.name);
-  });
-
-  const response = await fetch(url, { method: "POST", body });
-  return await response.json();
-}
-
 export default function BaseDemo(props: Partial<DropzoneProps>) {
-	  let [imageUrl, setImageUrl] = useState();
-  let { FileInput, openFileDialog, uploadToS3 } = useS3Upload();
-  const { trigger } = useSWRMutation("/api/documents", uploadDocuments);
-
-  let handleFileChange = async file => {
+  const { uploadToS3 } = useS3Upload();
+  
+  const handleFileChange = async (file) => {
   console.log(file);
-    let { url } = await uploadToS3(file);
-	console.log(url);
+    const { url } = await uploadToS3(file);
+    console.log("Successfully uploaded to S3!", url);
   };
-
+  
   return (
     <Dropzone
-      // onDrop={(files) =>  console.log(files) }
-	onDrop={(files) => trigger({ files })}
-      // onDrop={(files) =>  handleFileChange(files) }
+      onDrop={(files) => handleFileChange(files[0])} /* Pass the first file to handleFileChange */
       onReject={(files) => console.log('rejected files', files)}
       maxSize={3 * 1024 ** 2}
       accept={IMAGE_MIME_TYPE}
@@ -80,7 +62,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
             stroke={1.5}
           />
         </Dropzone.Idle>
-
+  
         <div>
           <Text size="xl" inline>
             Drag images here or click to select files

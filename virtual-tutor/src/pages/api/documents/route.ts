@@ -33,10 +33,19 @@ export default async function handler(req, res) {
 	  });
 	};
 
-
-    console.log(fields);
-
     // You can proceed with handling the fields here
+
+  const files = formData.getAll("file") as File[];
+
+	  const response = await Promise.all(
+		files.map(async (file) => {
+		  // not sure why I have to override the types here
+		  const Body = (await file.arrayBuffer()) as Buffer;
+		  s3.send(new PutObjectCommand({ Bucket, Key: file.name, Body }));
+		})
+	  );
+	
+	
 
   } catch (err) {
     console.error('Form parsing error:', err);

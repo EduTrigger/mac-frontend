@@ -1,0 +1,5 @@
+
+virtual-tutor/.env
+*.vsidx
+virtual-tutor/.vs/virtual-tutor/v17/.wsuo
+virtual-tutor/.vs/VSWorkspaceState.json
