@@ -3,6 +3,13 @@ import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { useS3Upload } from "next-s3-upload";
 import useSWR from "swr";
+import { APIRoute } from "next-s3-upload";
+
+// export function APIRoute.configure({
+  // key(req, filename) {
+    // return `${filename}`;
+  // }
+// });
 
 function ImageUploadIcon({ status, ...props }) {
   if (status.accepted) {
@@ -29,15 +36,18 @@ function getIconColor(status, theme) {
 export default function BaseDemo(props: Partial<DropzoneProps>) {
   const { uploadToS3 } = useS3Upload();
   
-  const handleFileChange = async (file) => {
-  console.log(file);
-    const { url } = await uploadToS3(file);
-    console.log("Successfully uploaded to S3!", url);
+  const handleFilesChange = async (files) => {
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
+      const { url } = await uploadToS3(file);
+      console.log('Successfully uploaded to S3!', url);
+    }
   };
+
   
   return (
     <Dropzone
-      onDrop={(files) => handleFileChange(files[0])} /* Pass the first file to handleFileChange */
+      onDrop={(files) => handleFilesChange(files)} /* Pass the first file to handleFileChange */
       onReject={(files) => console.log('rejected files', files)}
       maxSize={3 * 1024 ** 2}
       accept={IMAGE_MIME_TYPE}
