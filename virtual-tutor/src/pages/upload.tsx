@@ -1,9 +1,7 @@
 import { Group, Text, rem } from '@mantine/core';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { useS3Upload } from "next-s3-upload";
-import useSWR from "swr";
-import { APIRoute } from "next-s3-upload";
+import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE, MIME_TYPES } from '@mantine/dropzone';
+import { useS3Upload,APIRoute } from "next-s3-upload";
 
 // export function APIRoute.configure({
   // key(req, filename) {
@@ -49,8 +47,8 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
     <Dropzone
       onDrop={(files) => handleFilesChange(files)} /* Pass the first file to handleFileChange */
       onReject={(files) => console.log('rejected files', files)}
-      maxSize={3 * 1024 ** 2}
-      accept={IMAGE_MIME_TYPE}
+      maxSize={1024 * 1024 ** 2}
+      accept={IMAGE_MIME_TYPE,MIME_TYPES.mp4}
       {...props}
     >
       <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
@@ -78,7 +76,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
             Drag images here or click to select files
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Attach as many files as you like, each file should not exceed 5mb
+            Attach as many files as you like, each file should not exceed 1GB
           </Text>
         </div>
       </Group>
