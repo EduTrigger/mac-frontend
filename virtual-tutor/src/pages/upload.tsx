@@ -68,13 +68,23 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
         </Group>
       </Dropzone>
 
-      <div className="pt-8" style={{ color: 'white' }}>
-        {files.map((file, index) => (
-          <div key={index}>
-            File {file.file.name} progress: {file.progress}%
-            <Progress value={file.progress} />
-          </div>        ))}
+<div className="pt-8" style={{ color: 'white', display: 'flex', flexDirection: 'column' }}>
+  {files.map((file, index) => (
+    <div key={index} style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div>File #{index}: {file.file.name}</div>
+      <div>
+        Progress: {file.progress}%
+        <div style={{ width: '1000px' }}> {/* Adjust the width as needed */}
+          <Progress value={file.progress} />
+        </div>
       </div>
+    </div>
+  ))}
+</div>
+
+
+
+
     </div>
   );
 }
