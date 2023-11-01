@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { AspectRatio, Button, Table, Text } from "@mantine/core";
 
 const supabaseUrl = "YOUR_SUPABASE_URL";
