@@ -1,16 +1,7 @@
 import { Group, Text, rem, Progress } from '@mantine/core';
 import { Dropzone, DropzoneProps, MIME_TYPES } from '@mantine/dropzone';
 import { useS3Upload } from "next-s3-upload";
-
-function getIconColor(status, theme) {
-  return status.accepted
-    ? theme.colors[theme.primaryColor][6]
-    : status.rejected
-    ? theme.colors.red[6]
-    : theme.colorScheme === 'dark'
-    ? theme.colors.dark[0]
-    : theme.black;
-}
+import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 
 export default function BaseDemo(props: Partial<DropzoneProps>) {
   const { uploadToS3, files } = useS3Upload();
@@ -33,17 +24,36 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
         accept={[MIME_TYPES.mp4]}
         {...props}
       >
-        <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
-          <div>
-            <Text size="xl" inline>
-              Drag images here or click to select files
-            </Text>
-            <Text size="sm" c="dimmed" inline mt={7}>
-              Attach as many files as you like, each file should not exceed 1GB
-            </Text>
-          </div>
-        </Group>
-      </Dropzone>
+      <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
+        <Dropzone.Accept>
+          <IconUpload
+            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
+            stroke={1.5}
+          />
+        </Dropzone.Accept>
+        <Dropzone.Reject>
+          <IconX
+            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
+            stroke={1.5}
+          />
+        </Dropzone.Reject>
+        <Dropzone.Idle>
+          <IconPhoto
+            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
+            stroke={1.5}
+          />
+        </Dropzone.Idle>
+
+        <div>
+          <Text size="xl" inline>
+            Drag images here or click to select files
+          </Text>
+          <Text size="sm" c="dimmed" inline mt={7}>
+            Attach as many files as you like, each file should not exceed 5mb
+          </Text>
+        </div>
+      </Group>
+    </Dropzone>
 
 <div className="pt-8" style={{ color: 'white', display: 'flex', flexDirection: 'column' }}>
   {files.map((file, index) => (
