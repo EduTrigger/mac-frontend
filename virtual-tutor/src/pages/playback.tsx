@@ -10,7 +10,7 @@ const awsConfig = {
   accessKeyId: process.env.S3_UPLOAD_KEY,
   secretAccessKey: process.env.S3_UPLOAD_SECRET,
   region: process.env.S3_UPLOAD_REGION,
-  bucket: process.env.AMPLIFY_BUCKET
+  bucket: process.env.AMPLIFY_BUCKET,
 };
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -19,7 +19,8 @@ AWS.config.update(awsConfig);
 console.log("awsConfig:", awsConfig); // Debug
 
 export default function Demo() {
-  const defaultVideoUrl = "https://mac-bucket-demo.s3.amazonaws.com/file_example_MP4_1280_10MG.mp4";
+  const defaultVideoUrl =
+    "https://mac-bucket-demo.s3.amazonaws.com/file_example_MP4_1280_10MG.mp4";
 
   const [videos, setVideos] = useState([
     {
@@ -34,7 +35,9 @@ export default function Demo() {
 
   useEffect(() => {
     async function fetchVideos() {
-      const { data, error } = await supabase.from("material").select("video_url, status");
+      const { data, error } = await supabase
+        .from("material")
+        .select("video_url, status");
       if (error) {
         console.error("Error fetching videos:", error);
       } else {
@@ -87,7 +90,7 @@ export default function Demo() {
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-              width="100%"  // Set the width to 100%
+              width="100%" // Set the width to 100%
               height="400px" // Set the height to 100%
             />
           </AspectRatio>
@@ -108,7 +111,13 @@ export default function Demo() {
       </div>
 
       <div className="flex">
-        <iframe src={"https://www.agentize.ai/agents/clgcyi78m0000v8ns3qcb4g2g"} width="100%" height="600px" />
+        <iframe
+          src={
+            "https://www.agentize.ai/agents/clgcyi78m0000v8ns3qcb4g2g?headerless"
+          }
+          width="100%"
+          height="600px"
+        />
       </div>
     </>
   );
