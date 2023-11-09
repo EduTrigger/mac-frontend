@@ -85,35 +85,10 @@ export default function Demo() {
     // console.log("process.env.AMPLIFY_BUCKET:", process.env.AMPLIFY_BUCKET);
     console.log("video:", index);
     setSelectedVideoIndex(index);
-    // console.log("video.video_url:", video.video_url);
-
-    // You can use the AWS SDK to download the S3 object
-    // const s3 = new AWS.S3();
-
-    // const params = {
-    //   Bucket: process.env.AMPLIFY_BUCKET || "",
-    //   Key: selectedVideo().video_name,
-    // };
-
-    // // console.log("params:", params); // Debug
-
-    // s3.getObject(params, (err, data) => {
-    //   if (err) {
-    //     // console.error("Error downloading S3 object:", err);
-    //   } else {
-    //     // Assuming the S3 object contains the URL to the video
-    //     const videoUrl = data.Body?.toString() || "";
-    //     console.log("videoUrl", videoUrl);
-
-    //     // Update the selected video with the S3 object's URL
-    //     setSelectedVideoIndex(index);
-    //     // setSelectedVideo({ ...video, video_url: videoUrl });
-    //   }
-    // });
   };
 
   return (
-    <Stack gap="lg">
+    <Stack gap="lg" p={20}>
       {/* <Space h={10} w={20}></Space> */}
       <Grid grow gutter="md">
         <Grid.Col span={6}>

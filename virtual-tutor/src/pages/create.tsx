@@ -1,12 +1,4 @@
-import {
-  Group,
-  Text,
-  rem,
-  Progress,
-  Container,
-  Stack,
-  Button,
-} from "@mantine/core";
+import { Group, Text, rem, Progress, Stack, Button, Box } from "@mantine/core";
 import { Dropzone, DropzoneProps, MIME_TYPES } from "@mantine/dropzone";
 import { useS3Upload } from "next-s3-upload";
 import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
@@ -16,7 +8,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
   const { uploadToS3, files } = useS3Upload();
   const router = useRouter();
 
-  const handleFilesChange = async (files) => {
+  const handleFilesChange = async (files: string | any[]) => {
     for (let index = 0; index < files.length; index++) {
       const file = files[index];
       const { url } = await uploadToS3(file);
@@ -31,7 +23,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
       <Dropzone
         styles={{
           root: {
-            border: "1px dashed #868e96", // Custom border here
+            border: "4px dashed #868e96", // Custom border here
             borderRadius: 10, // Custom border radius here
           },
         }}
@@ -89,29 +81,23 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
         </Group>
       </Dropzone>
 
-      <div
-        className="pt-8"
-        style={{ color: "white", display: "flex", flexDirection: "column" }}
-      >
+      <Stack mt={20} mb={20}>
         {files.map((file, index) => (
-          <div
-            key={index}
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <div>
+          <Box key={index}>
+            <Text>
               File #{index}: {file.file.name}
-            </div>
-            <div>
+            </Text>
+            <Text>
               Progress: {file.progress}%
               <div style={{ width: "1000px" }}>
                 {" "}
                 {/* Adjust the width as needed */}
-                <Progress value={file.progress} />
               </div>
-            </div>
-          </div>
+            </Text>
+            <Progress value={file.progress} />
+          </Box>
         ))}
-      </div>
+      </Stack>
       <Button onClick={onClick}>Go Play List</Button>
     </Stack>
   );
