@@ -17,8 +17,9 @@ import {
   Button,
 } from "@mantine/core";
 import AWS from "aws-sdk";
-import { useDisclosure } from "@mantine/hooks";
 import { Video } from "@/models/video";
+import { mockVideoNames, statusDisplay } from "@/models/mock";
+import { IconPlayerPlay } from "@tabler/icons-react";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -46,7 +47,6 @@ const agent_id = "clgcyi78m0000v8ns3qcb4g2g";
 
 export default function Demo() {
   const NO_SELECTION = -1;
-  const [opened, { toggle }] = useDisclosure();
 
   const [videos, setVideos] = useState<Video[]>([]);
 
@@ -58,6 +58,7 @@ export default function Demo() {
       return videos[selectedVideoIndex];
     }
   };
+
   const fetchVideos = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -67,7 +68,7 @@ export default function Demo() {
       if (error) {
         console.error("Error fetching videos:", error);
       } else {
-        setVideos(data);
+        setVideos(data.slice(0, 6));
         console.log("Fetched data:", data);
       }
     } catch (error) {
@@ -83,40 +84,40 @@ export default function Demo() {
     // Debug: Check environment variables and video object
     // console.log("process.env.AMPLIFY_BUCKET:", process.env.AMPLIFY_BUCKET);
     console.log("video:", index);
-    // setSelectedVideoIndex(index);
+    setSelectedVideoIndex(index);
     // console.log("video.video_url:", video.video_url);
 
     // You can use the AWS SDK to download the S3 object
-    const s3 = new AWS.S3();
+    // const s3 = new AWS.S3();
 
-    const params = {
-      Bucket: process.env.AMPLIFY_BUCKET || "",
-      Key: selectedVideo().video_name,
-    };
+    // const params = {
+    //   Bucket: process.env.AMPLIFY_BUCKET || "",
+    //   Key: selectedVideo().video_name,
+    // };
 
-    // console.log("params:", params); // Debug
+    // // console.log("params:", params); // Debug
 
-    s3.getObject(params, (err, data) => {
-      if (err) {
-        // console.error("Error downloading S3 object:", err);
-      } else {
-        // Assuming the S3 object contains the URL to the video
-        const videoUrl = data.Body?.toString() || "";
-        console.log("videoUrl", videoUrl);
+    // s3.getObject(params, (err, data) => {
+    //   if (err) {
+    //     // console.error("Error downloading S3 object:", err);
+    //   } else {
+    //     // Assuming the S3 object contains the URL to the video
+    //     const videoUrl = data.Body?.toString() || "";
+    //     console.log("videoUrl", videoUrl);
 
-        // Update the selected video with the S3 object's URL
-        setSelectedVideoIndex(index);
-        // setSelectedVideo({ ...video, video_url: videoUrl });
-      }
-    });
+    //     // Update the selected video with the S3 object's URL
+    //     setSelectedVideoIndex(index);
+    //     // setSelectedVideo({ ...video, video_url: videoUrl });
+    //   }
+    // });
   };
 
   return (
     <Stack gap="lg">
       {/* <Space h={10} w={20}></Space> */}
-      <Grid>
-        <Grid.Col span={4}>
-          <AspectRatio ratio={1920 / 1080} maw="50%">
+      <Grid grow gutter="md">
+        <Grid.Col span={6}>
+          <AspectRatio ratio={1920 / 1080}>
             <iframe
               src={selectedVideo().video_url}
               title="Video player"
@@ -130,35 +131,41 @@ export default function Demo() {
           </AspectRatio>
         </Grid.Col>
         <Grid.Col span={6}>
-          <Container w={100} h={150} c="red"></Container>
-          <Table striped>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Material</Table.Th>
-                <Table.Th>Status </Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {videos.map((video, i) => (
-                <Table.Tr key={video.id}>
-                  <Table.Td>
-                    <Button
-                      variant="filled"
-                      fullWidth
-                      onClick={() => handleRowClick(i)}
-                    >
-                      {video.video_name}
-                    </Button>
-                  </Table.Td>
-                  <Table.Td>{video.status}</Table.Td>
+          <Box>
+            <Table striped>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Material</Table.Th>
+                  <Table.Th>Status </Table.Th>
                 </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+              </Table.Thead>
+              <Table.Tbody>
+                {videos.map((video, i) => (
+                  <Table.Tr key={video.id}>
+                    <Table.Td>
+                      <Text>{mockVideoNames(i)}</Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Button
+                        variant="filled"
+                        fullWidth
+                        onClick={() => handleRowClick(i)}
+                        disabled={video.status !== "clip_processed"}
+                        rightSection={<IconPlayerPlay size={14} />}
+                      >
+                        {statusDisplay(video.status)}
+                      </Button>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Box>
         </Grid.Col>
       </Grid>
       <Box>
         <iframe
+          allow="microphone;"
           src={`https://www.agentize.ai/agents/${agent_id}?headerless`}
           width="100%"
           height="600px"
