@@ -10,10 +10,11 @@ import {
 import { Dropzone, DropzoneProps, MIME_TYPES } from "@mantine/dropzone";
 import { useS3Upload } from "next-s3-upload";
 import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { useRouter } from "next/router";
 
 export default function BaseDemo(props: Partial<DropzoneProps>) {
   const { uploadToS3, files } = useS3Upload();
+  const router = useRouter();
 
   const handleFilesChange = async (files) => {
     for (let index = 0; index < files.length; index++) {
@@ -22,7 +23,9 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
       console.log("Successfully uploaded to S3!", url);
     }
   };
-
+  const onClick = () => {
+    router.push("/play");
+  };
   return (
     <Stack w="60%" p={20}>
       <Dropzone
@@ -109,7 +112,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
           </div>
         ))}
       </div>
-      <Button>Play List</Button>
+      <Button onClick={onClick}>Go Play List</Button>
     </Stack>
   );
 }
