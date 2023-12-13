@@ -1,19 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import {
   AspectRatio,
   Stack,
   Table,
   Text,
-  Container,
-  AppShell,
-  Flex,
-  Burger,
-  Group,
   Box,
-  Space,
   Grid,
-  Anchor,
   Button,
 } from "@mantine/core";
 import AWS from "aws-sdk";
@@ -37,20 +30,19 @@ console.log("awsConfig:", awsConfig); // Debug
 
 const defaultVideo: Video = {
   video_name: "Default Video",
-  video_url:
-    "https://mac-bucket-demo.s3.amazonaws.com/file_example_MP4_1280_10MG.mp4",
+  video_url: "https://mac-bucket-demo.s3.amazonaws.com/file_example_MP4_1280_10MG.mp4",
   status: "clip_ready",
   id: 0, // Replace with the actual ID you want to use
 };
 
 const agent_id = "cloqi2ika0000k108ybdirwaa";
 
-export default function Demo() {
+const Demo = () => {
   const NO_SELECTION = -1;
 
   const [videos, setVideos] = useState<Video[]>([]);
-
   const [selectedVideoIndex, setSelectedVideoIndex] = useState(NO_SELECTION);
+
   const selectedVideo = (): Video => {
     if (selectedVideoIndex === NO_SELECTION) {
       return defaultVideo;
@@ -81,15 +73,38 @@ export default function Demo() {
   }, [fetchVideos]);
 
   const handleRowClick = (index: number) => {
-    // Debug: Check environment variables and video object
-    // console.log("process.env.AMPLIFY_BUCKET:", process.env.AMPLIFY_BUCKET);
     console.log("video:", index);
     setSelectedVideoIndex(index);
   };
 
+  // Function to send a message to the parent window
+  const sendIframeMessage = () => {
+    // 'parent' refers to the parent window
+    // 'message' is the data you want to send
+    // '*' can be replaced with the origin of the parent window for added security
+    parent.postMessage('message', '*');
+  };
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== 'http://localhost.com') // the origin of your iframe
+        return;
+
+      console.log('Received message:', event.data);
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    // Call the function when the component mounts
+    sendIframeMessage();
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
   return (
     <Stack gap="lg" p={20}>
-      {/* <Space h={10} w={20}></Space> */}
       <Grid grow gutter="md">
         <Grid.Col span={6}>
           <AspectRatio ratio={1920 / 1080}>
@@ -100,8 +115,8 @@ export default function Demo() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               style={{ border: 0 }}
-              width="100%" // Set the width to 100%
-              height="400px" // Set the height to 100%
+              width="100%"
+              height="400px"
             />
           </AspectRatio>
         </Grid.Col>
@@ -144,8 +159,11 @@ export default function Demo() {
           src={`https://www.agentize.ai/agents/${agent_id}?headerless`}
           width="100%"
           height="600px"
+          onLoad={() => sendIframeMessage()} // Call the function when the iframe loads
         />
       </Box>
     </Stack>
   );
-}
+};
+
+export default Demo;
