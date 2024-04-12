@@ -26,8 +26,8 @@ const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const awsConfig = {
-  accessKeyId: process.env.S3_UPLOAD_KEY,
-  secretAccessKey: process.env.S3_UPLOAD_SECRET,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.S3_UPLOAD_REGION,
   bucket: process.env.AMPLIFY_BUCKET,
 };
@@ -38,7 +38,7 @@ console.log("awsConfig:", awsConfig); // Debug
 const defaultVideo: Video = {
   video_name: "Default Video",
   video_url:
-    "https://mac-bucket-demo.s3.amazonaws.com/file_example_MP4_1280_10MG.mp4",
+    "https://mac-project.s3.amazonaws.com/test-0402.mp4",
   status: "clip_ready",
   id: 0, // Replace with the actual ID you want to use
 };

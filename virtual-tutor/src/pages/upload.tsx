@@ -9,7 +9,7 @@ export default function BaseDemo(props: Partial<DropzoneProps>) {
   const handleFilesChange = async (files) => {
     for (let index = 0; index < files.length; index++) {
       const file = files[index];
-      // console.log(file);
+      console.log(file);
       const { url } = await uploadToS3(file);
       console.log("Successfully uploaded to S3!", url);
     }

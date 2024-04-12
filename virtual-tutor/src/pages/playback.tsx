@@ -7,8 +7,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const awsConfig = {
-  accessKeyId: process.env.S3_UPLOAD_KEY,
-  secretAccessKey: process.env.S3_UPLOAD_SECRET,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.S3_UPLOAD_REGION,
   bucket: process.env.AMPLIFY_BUCKET,
 };
