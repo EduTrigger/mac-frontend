@@ -32,9 +32,7 @@ export const mockVideoNames = (index: number): string => {
 export const statusDisplay = (status: string): string => {
   if (status === "clip_processed") {
     return "READY";
-  } else if (status === "clip_readyss") {
-    return "PROCESSING...";
   } else {
-    return "Unknown";
+    return "PROCESSING...";
   }
 };

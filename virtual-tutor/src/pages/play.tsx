@@ -40,10 +40,9 @@ const defaultVideo: Video = {
   video_url:
     "https://mac-project.s3.amazonaws.com/test-0402.mp4",
   status: "clip_ready",
-  id: 0, // Replace with the actual ID you want to use
+  id: 0,
+  agentize_id: "cloqi2ika0000k108ybdirwaa"
 };
-
-const agent_id = "cloqi2ika0000k108ybdirwaa";
 
 export default function Demo() {
   const NO_SELECTION = -1;
@@ -63,7 +62,7 @@ export default function Demo() {
     try {
       const { data, error } = await supabase
         .from("material")
-        .select("video_url, status, id, video_name");
+        .select("video_url, status, id, video_name, agentize_id");
 
       if (error) {
         console.error("Error fetching videos:", error);
@@ -118,7 +117,7 @@ export default function Demo() {
                 {videos.map((video, i) => (
                   <Table.Tr key={video.id}>
                     <Table.Td>
-                      <Text>{mockVideoNames(i)}</Text>
+                      <Text>{(video.video_name)}</Text>
                     </Table.Td>
                     <Table.Td>
                       <Button
@@ -141,7 +140,7 @@ export default function Demo() {
       <Box>
         <iframe
           allow="microphone;"
-          src={`https://www.agentize.ai/agents/${agent_id}?headerless`}
+          src={`https://www.agentize.ai/agents/${selectedVideo().agentize_id}?headerless`}
           width="100%"
           height="600px"
         />
