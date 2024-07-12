@@ -25,3 +25,17 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Custom CSS for the Table and Table.Td */
+.custom-table {
+  border-collapse: collapse; /* Ensure borders don't interfere with spacing */
+  width: 100%; /* Make the table fill its container */
+
+  /* Define a consistent column width */
+  & .custom-td {
+    width: 25%; /* Adjust this value as needed for your desired spacing */
+  }
+
+  /* Add styling for the table borders, padding, or other properties */
+  /* Example: border: 1px solid #ccc; padding: 8px; */
+}
